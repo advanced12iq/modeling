@@ -1,0 +1,239 @@
+\documentclass[a4paper, 14pt]{extarticle}
+
+% Поля
+%--------------------------------------
+\usepackage{minted}
+\usepackage{listings}
+\usepackage{amsmath, amssymb, graphicx, array, float}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage[english, main=russian]{babel}
+\geometry{a4paper,tmargin=2cm,bmargin=2cm,lmargin=3cm,rmargin=1cm}
+\lstset{
+    extendedchars=true,  
+    inputencoding=utf8
+}
+%--------------------------------------
+
+%Russian-specific packages
+%--------------------------------------
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc} 
+%--------------------------------------
+
+\usepackage{textcomp}
+\usepackage{indentfirst}               
+\usepackage{float}
+
+%Graphics
+%--------------------------------------
+\usepackage{graphicx}
+\usepackage{caption}
+\graphicspath{ {./images/} }
+\usepackage{wrapfig}
+%--------------------------------------
+
+\linespread{1.3}
+
+\sloppy
+\clubpenalty=10000
+\widowpenalty=10000
+
+\usepackage{enumitem}
+\usepackage{caption} 
+\usepackage{hyperref}
+
+\hypersetup {
+	unicode=true
+}
+
+\DeclareCaptionLabelSeparator*{emdash}{~--- }
+\captionsetup[figure]{labelsep=emdash,font=onehalfspacing,position=bottom}
+
+\usepackage{tempora}
+\usepackage{minted}
+
+% Листинги
+%--------------------------------------
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  captionpos=t,
+  frame=single,
+  numbers=left,
+  numbersep=5pt,
+  xleftmargin=25pt,
+  xrightmargin=25pt
+}
+%--------------------------------------
+
+\usepackage{amsthm,amsfonts,amsmath,amssymb,amscd}
+\usepackage{mathtools}
+\usepackage[perpage]{footmisc}
+
+%--------------------------------------
+\begin{document}
+%--------------------------------------
+
+%--------------------------------------
+%			ТИТУЛЬНЫЙ ЛИСТ (БЕЗ ИЗМЕНЕНИЙ)
+%--------------------------------------
+\begin{titlepage}
+\thispagestyle{empty}
+\newpage
+
+\vspace*{-60pt}
+\hspace{-65pt}
+\begin{minipage}{0.3\textwidth}
+\hspace*{-20pt}\centering
+\includegraphics[width=\textwidth]{emblem}
+\end{minipage}
+\begin{minipage}{0.67\textwidth}\small \textbf{
+\vspace*{-0.7ex}
+\hspace*{-6pt}\centerline{Министерство науки и высшего образования Российской Федерации}
+\vspace*{-0.7ex}
+\centerline{Федеральное государственное автономное образовательное учреждение }
+\vspace*{-0.7ex}
+\centerline{высшего образования}
+\vspace*{-0.7ex}
+\centerline{<<Московский государственный технический университет}
+\vspace*{-0.7ex}
+\centerline{имени Н.Э. Баумана}
+\vspace*{-0.7ex}
+\centerline{(национальный исследовательский университет)>>}
+\vspace*{-0.7ex}
+\centerline{(МГТУ им. Н.Э. Баумана)}}
+\end{minipage}
+
+\vspace{-25pt}
+\hspace{-35pt}\rule{\textwidth}{2.3pt}
+
+\vspace*{-20.3pt}
+\hspace{-35pt}\rule{\textwidth}{0.4pt}
+
+\vspace{1.5ex}
+\hspace{-35pt} \noindent \small ФАКУЛЬТЕТ\hspace{80pt} <<Информатика и системы управления>>
+
+\vspace*{-16pt}
+\hspace{47pt}\rule{0.83\textwidth}{0.4pt}
+
+\vspace{0.5ex}
+\hspace{-35pt} \noindent \small КАФЕДРА\hspace{50pt} <<Теоретическая информатика и компьютерные технологии>>
+
+\vspace*{-16pt}
+\hspace{30pt}\rule{0.866\textwidth}{0.4pt}
+  
+\vspace{11em}
+
+\begin{center}
+\Large {\bf Лабораторная работа № 1 } \\ 
+\large { <<Сравнение модели Галилея и модели Ньютона>>} \\
+\large { по курсу <<Моделирование>>} 
+\end{center}\normalsize
+
+\vspace{8em}
+
+\begin{flushright}
+  {Студент группы ИУ9-81Б: Филимонов М. Д. \hspace*{15pt}\\ 
+  \vspace{2ex}
+  Преподаватель: Домрачева А. Б.\hspace*{15pt}}
+\end{flushright}
+
+\vfill
+
+\begin{center}
+\textsl{Москва 2026}
+\end{center}
+\end{titlepage}
+
+%--------------------------------------
+\section{Цель работы}
+% Placeholder
+Изучить и сравнить две модели движения тела: аналитическую модель Галилея без сопротивления воздуха и модель Ньютона с квадратичным сопротивлением воздуха, решаемую методом Рунге-Кутты 4-го порядка.
+
+\section{Постановка задачи}
+% Placeholder
+Для параметров $\alpha=45^\circ$, $v_0=1\,\text{м/с}$ и начальной точки $(0,0)$ требуется построить обе траектории, вычислить точную координату падения по оси $x$, определить время полета и максимальную высоту, а затем сравнить результаты. Для модели Ньютона использовать коэффициент сопротивления $\beta=\frac{cS\rho}{2}$ при $c=0.15$, $S=3$, $\rho=1.225\,\text{кг/м}^3$.
+
+\section{Теоретические основы}
+
+\subsection{Подраздел}
+% Placeholder
+В модели Галилея сопротивление воздуха отсутствует, поэтому движение по осям описывается формулами
+\[
+ x(t)=x_0+v_0\cos\alpha\,t,\qquad
+ y(t)=y_0+v_0\sin\alpha\,t-\frac{gt^2}{2}.
+\]
+После исключения времени получаем уравнение траектории
+\[
+ y(x)=-\frac{g x^2}{2v_0^2\cos^2\alpha}+\tan\alpha\,x+y_0.
+\]
+Эта модель позволяет аналитически найти дальность полета и время падения.
+
+\subsection{Подраздел}
+% Placeholder
+В модели Ньютона вводятся компоненты скорости $u=dx/dt$ и $w=dy/dt$. Система уравнений имеет вид
+\[
+\begin{cases}
+\dfrac{dx}{dt}=u, \\
+\dfrac{dy}{dt}=w, \\
+\dfrac{du}{dt}=-\dfrac{\beta}{m}u\sqrt{u^2+w^2}, \\
+\dfrac{dw}{dt}=-g-\dfrac{\beta}{m}w\sqrt{u^2+w^2}.
+\end{cases}
+\]
+Здесь $\beta$ вычисляется по условию задачи, а масса берется для чугунного шарика: $m=\rho_{\text{чугун}}\frac{4}{3}\pi r^3$.
+
+\subsection{Подраздел}
+% Placeholder
+Для численного решения используется метод Рунге-Кутты 4-го порядка, обеспечивающий хорошую точность на малом шаге интегрирования. Точка падения определяется интерполяцией между соседними шагами, где значение $y$ меняет знак, что позволяет точнее вычислить $x_{\text{land}}$.
+
+\section{Программная реализация}
+
+\begin{minted}[breaklines]{python}
+# PLACEHOLDER:
+# Вставьте программный код
+def newton_rhs(state, params):
+    x, y, u, w = state
+    g = params["g"]
+    beta = params["beta"]
+    m = params["m"]
+    speed = (u*u + w*w) ** 0.5
+    du_dt = -(beta / m) * u * speed
+    dw_dt = -g - (beta / m) * w * speed
+    return [u, w, du_dt, dw_dt]
+
+def rk4_step(state, dt, rhs, params):
+    k1 = rhs(state, params)
+    k2 = rhs(state + 0.5 * dt * k1, params)
+    k3 = rhs(state + 0.5 * dt * k2, params)
+    k4 = rhs(state + dt * k3, params)
+    return state + (dt / 6.0) * (k1 + 2*k2 + 2*k3 + k4)
+\end{minted}
+
+\section{Анализ результатов}
+
+% Placeholder
+По результатам расчета получено:
+\begin{itemize}
+    \item модель Галилея: $x_{\text{land}}=0.101937\,\text{м}$, $t_{\text{land}}=0.144160\,\text{с}$, $y_{\max}=0.025484\,\text{м}$;
+    \item модель Ньютона с сопротивлением: $x_{\text{land}}=0.061637\,\text{м}$, $t_{\text{land}}=0.123878\,\text{с}$, $y_{\max}=0.018945\,\text{м}$;
+    \item разница дальности: $\Delta x=x_{\text{newton}}-x_{\text{galileo}}=-0.040300\,\text{м}$.
+\end{itemize}
+Полученные значения показывают, что учет сопротивления воздуха уменьшает дальность и высоту полета.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{trajectory_comparison.png}
+    \caption{Сравнение траекторий в моделях Галилея и Ньютона с сопротивлением воздуха}
+    \label{fig:result}
+\end{figure}
+
+\section{Заключение}
+
+% Placeholder
+В работе выполнено сравнение двух моделей движения при одинаковых начальных условиях. Аналитическая модель Галилея дает большую дальность полета, тогда как модель Ньютона с сопротивлением воздуха показывает более реалистичное уменьшение дальности, времени полета и максимальной высоты. Численный метод Рунге-Кутты 4-го порядка корректно решает систему ОДУ и позволяет точно определять точку падения.
+
+\end{document}

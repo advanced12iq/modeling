@@ -1,89 +1,94 @@
-# Skill: report-writing
+﻿---
+name: report-writing
+description: Generate a complete Russian-language laboratory report in LaTeX using a strict reusable template with fixed formatting and fixed title page content. Use when you need to create report.tex/report.pdf for modeling labs, keep the exact section structure from template.tex, include plots produced by .py scripts in section "Анализ результатов", use shared emblem.png from repository root, and store report files in labN/report/.
+---
 
-## Goal
-Подготовка полного лабораторного отчёта по дисциплине «Моделирование» в формате LaTeX строго по фиксированному шаблону, с обязательным русским языком и встраиванием графиков в раздел результатов.
+# Report Writing Skill
 
-## When to use
-Используй этот навык, когда пользователь просит:
-- подготовить/сгенерировать лабораторный отчёт;
-- оформить отчёт по шаблону;
-- собрать отчёт из постановки задачи, кода, результатов валидации и графиков.
+Follow this workflow exactly.
 
-## Mandatory constraints
-1. Отчёт пишется **только на русском языке**.
-2. Структура отчёта должна **строго** соответствовать фиксированному шаблону.
-3. Сохраняются без изменений:
-   - титульная страница (титульник);
-   - заголовки разделов;
-   - порядок разделов документа.
-4. Файл `emblem.png` берётся из корня репозитория и используется на титульной странице.
-5. Если при выполнении программы получены графики, они:
-   - добавляются в отчёт;
-   - размещаются именно в разделе результатов/анализа результатов;
-   - встраиваются как локальные изображения (не внешние ссылки).
-6. Раздел «Теоретические основы» пишется в академическом стиле, но понятным языком уровня «сильный студент 1 курса».
+## 1) Collect required inputs
+Determine the target lab folder first (`lab1/`, `lab2/`, ...).  
+All report files must be placed in `labN/report/` only.
 
-## Required inputs
-Перед генерацией отчёта собери и проверь входные данные:
-1. Описание задания (цель, постановка, требования).
-2. Реализованный код (основные функции/алгоритмы).
-3. Результаты проверки/валидации (ошибки, метрики, тесты).
-4. Артефакты визуализации (пути к изображениям графиков).
-5. Наличие `emblem.png` в корне проекта.
+Read these files from `labN/` if they exist:
+- `solution.py`
+- `solution.ipynb`
+- `comparison.csv`
+- `validation_report.md`
+- generated images (for example `trajectory_comparison.png`)
+- repository root `emblem.png` (mandatory shared asset for title page)
 
-## Output contract
-Навык должен возвращать готовый LaTeX-документ отчёта, который:
-- компилируется в PDF;
-- использует фиксированный шаблон;
-- содержит все обязательные разделы;
-- включает код/фрагменты реализации;
-- включает результаты и графики;
-- завершён выводами по работе.
+If plot files are missing, run `solution.py` first so plots are generated before writing the report.
 
-## Workflow
-1. **Сбор данных**
-   - Извлечь из задания цель и формальные требования.
-   - Выделить из кода алгоритм и ключевые части реализации.
-   - Собрать численные результаты и пути к графикам.
-2. **Проверка шаблонных ограничений**
-   - Зафиксировать структуру разделов строго как в шаблоне.
-   - Подтвердить наличие эмблемы `emblem.png`.
-3. **Формирование содержания разделов**
-   - Цель работы.
-   - Постановка задачи.
-   - Теоретические основы (аккуратно, формально, без перегруза).
-   - Программная реализация.
-   - Анализ результатов (обязательно с графиками при их наличии).
-   - Заключение.
-4. **Сборка LaTeX**
-   - Использовать фиксированную преамбулу и оформление титульника.
-   - Сохранить порядок разделов и стиль из шаблона.
-5. **Финальная валидация отчёта**
-   - Проверить русский язык по всему документу.
-   - Проверить, что изображения подключены локально.
-   - Проверить, что графики находятся в разделе результатов.
-   - Проверить отсутствие изменений структуры шаблона.
+Before writing report files:
+- create `labN/report/` if missing;
+- keep generated artifacts in `labN/` as source of truth;
+- copy (do not move) report resources into `labN/report/` when needed for LaTeX paths (for example required figures and optional `images/` folder);
+- do not move `explanation.md` or `simple.md` into `labN/report/`.
 
-## Generation checklist
-- [ ] Отчёт полностью на русском языке.
-- [ ] Титульник соответствует шаблону.
-- [ ] Заголовки разделов и порядок совпадают с шаблоном.
-- [ ] `emblem.png` используется на титульной странице.
-- [ ] Теория изложена в академическом, но доступном стиле.
-- [ ] Раздел реализации содержит релевантный код/описание алгоритма.
-- [ ] Раздел результатов содержит численные итоги и графики.
-- [ ] Все графики встроены локально (без внешних ссылок).
-- [ ] Добавлено корректное заключение.
+## 2) Build report from strict template
+Use `template.tex` from this skill as the base.
+Preserve these structural elements:
+- title page
+- section headings
+- overall section order and formatting
+- do not change title-page formatting or text
+- do not add placeholders on title page
 
-## Minimal section skeleton (must preserve order)
-1. `\section{Цель работы}`
-2. `\section{Постановка задачи}`
-3. `\section{Теоретические основы}`
-4. `\section{Программная реализация}`
-5. `\section{Анализ результатов}`
-6. `\section{Заключение}`
+Required section order:
+1. `Цель работы`
+2. `Постановка задачи`
+3. `Теоретические основы`
+4. `Программная реализация`
+5. `Анализ результатов`
+6. `Заключение`
 
-## Notes for implementation
-- Если пользователь даёт полный шаблон LaTeX, использовать его как единственный источник структуры и форматирования.
-- Если фактические данные (числа/графики) отсутствуют, явно запросить недостающие артефакты перед финальной генерацией.
-- Для листингов кода применять окружения, совместимые с шаблоном (`minted`/`listings`) без изменения общей структуры документа.
+## 3) Content rules
+- Write in Russian.
+- Keep academic style formal but simple: level of an intelligent first-year student.
+- Keep theory grammatically correct and logically connected to the implementation.
+- In `Анализ результатов`, always include all generated plots from `.py` execution.
+- Insert figures from files (no screenshots).
+- Keep references local to `labN/report/` for report assets (for example `trajectory_comparison.png` or `images/...`).
+- Use shared root emblem for title page (`../../emblem.png` from `labN/report/`, or copied local asset if explicitly required by template constraints).
+
+## 4) Figure policy
+- All figures must be in `Анализ результатов`.
+- Each figure must have `\caption{...}` and `\label{...}`.
+- Use `\begin{figure}[H]` and `\centering`.
+- Recommended width: `0.85\textwidth` to `0.95\textwidth`.
+
+## 5) Program code section
+In `Программная реализация`, include either:
+- full implementation code with `minted`/`lstlisting`, or
+- full file include via `\lstinputlisting{solution.py}`.
+
+Mandatory rule: insert the implementation code **in full** (`solution.py` entirely), without omissions, truncation, or shortened fragments.
+Prefer `\lstinputlisting{solution.py}` when the template allows it.
+If `solution.py` remains in `labN/`, reference it from report folder with a relative path (for example `\lstinputlisting{../solution.py}`).
+
+## 6) Output artifacts
+Produce:
+1. `labN/report/report.tex` (completed report)
+2. `labN/report/report.pdf` (compiled via pdfLaTeX-compatible tool)
+3. intermediate LaTeX artifacts in the same folder (`labN/report/`), if generated (`.aux`, `.log`, `.out`, etc.)
+4. keep generated code outputs in `labN/`; if report needs them, create copies in `labN/report/` rather than moving originals
+
+## 7) Compilation and validation
+Compile with a pdfLaTeX-compatible pipeline. Preferred command:
+- `cd labN/report && pdflatex -interaction=nonstopmode report.tex`
+
+If bibliography is not used, one or two pdflatex passes are enough.
+
+Verify after build:
+- `labN/report/report.pdf` exists
+- no broken image paths
+- title page uses shared root `emblem.png` (or validated copied equivalent)
+- all plots are present inside `Анализ результатов`
+
+## 8) Fallback when LaTeX compiler is unavailable
+If `pdflatex` is unavailable in the environment:
+- still produce valid `labN/report/report.tex`
+- report exact missing command/tool in the final status
+- provide exact compile command for Overleaf/local TeX installation, keeping `labN/report/` as working folder

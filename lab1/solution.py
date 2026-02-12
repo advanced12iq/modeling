@@ -1,10 +1,21 @@
-﻿import csv
+import csv
 import math
 from dataclasses import dataclass
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+
+
+def configure_matplotlib_for_cyrillic() -> None:
+    plt.rcParams["font.family"] = "sans-serif"
+    plt.rcParams["font.sans-serif"] = [
+        "DejaVu Sans",
+        "Arial",
+        "Liberation Sans",
+        "Noto Sans",
+    ]
+    plt.rcParams["axes.unicode_minus"] = False
 
 
 @dataclass
@@ -181,6 +192,7 @@ def save_comparison_csv(comparison_rows: list, output_path: Path) -> None:
 
 
 def save_plot(galileo_res: dict, newton_res: dict, output_path: Path) -> None:
+    configure_matplotlib_for_cyrillic()
     plt.figure(figsize=(9, 5))
     plt.plot(galileo_res["x"], galileo_res["y"], label="Модель Галилея (без сопротивления)", linewidth=2.0)
     plt.plot(newton_res["x"], newton_res["y"], label="Модель Ньютона + сопротивление (RK4)", linewidth=2.0)

@@ -9,6 +9,20 @@ This repository is configured for completing laboratory assignments in the subje
    - Remove non-coding details (deadlines, report formatting, submission mechanics, grading bureaucracy, etc.).
 2. **Confirm programming language from the prompt.**
    - The programming language for each lab is defined by the prompt.
+3. **Store each lab in its own folder.**
+   - Keep all files related to one lab (code, report, generated artifacts) inside that lab folder (for example: `lab1/`, `lab2/`).
+   - If a lab folder does not exist yet, create it before generating any new files.
+4. **Use shared and local assets consistently.**
+   - Keep shared `emblem.png` in the repository root so all labs can use it.
+   - Keep all code results (`.png`, `.csv`, and other generated artifacts) in the corresponding lab folder (`labN/`).
+   - `explanation.md` and `simple.md` must always be in `labN/` (not inside `labN/report/`).
+   - `labN/report/` must contain all files matching `report.*` and all assets used by `report.tex`; if an asset is generated in `labN/`, copy it to `labN/report/` when needed (do not move it out of `labN/`).
+5. **Encoding and Cyrillic safety (mandatory).**
+   - Save all text artifacts (`.py`, `.md`, `.tex`, `.csv`, `.ipynb` JSON) strictly in `UTF-8` without BOM.
+   - Never write Russian/Cyrillic text through a non-UTF shell pipeline unless encoding is explicitly controlled.
+   - When generating notebooks programmatically, write JSON with `encoding="utf-8"` and `ensure_ascii=False`.
+   - If plots contain Russian labels/titles/legends, configure matplotlib fonts explicitly (for example, `DejaVu Sans`) and set `axes.unicode_minus=False`.
+   - Before handoff, run a quick encoding sanity check: no mojibake fragments (for example, `вЂ`, `Ð`, `Ñ`) and no accidental `?` substitution in human-readable Russian text.
 
 ---
 
@@ -61,12 +75,16 @@ This repository is configured for completing laboratory assignments in the subje
    - Validate outputs against assignment specification.
 3. **Example-Based Validation**
    - If assignment includes examples: run exact samples and check correctness.
-   - If no examples: design and run **2–3 basic test cases**.
+   - If no examples: design and run **2-3 basic test cases**.
 4. **Visualization Validation**
    - Confirm required plots are generated.
    - Confirm `.py` execution saves figures to files (no interactive-only behavior).
+   - Confirm Russian labels in generated figures are rendered as text, not `?` boxes/placeholders.
 5. **Environment Validation**
    - Verify solution runs correctly inside the specified **uv environment**.
+6. **Notebook encoding validation**
+   - Execute the notebook end-to-end.
+   - Confirm code cells, markdown cells, and printed outputs keep Cyrillic text readable (no `?` substitution).
 
 **Outputs:**
 - A structured validation report with:
@@ -82,8 +100,8 @@ This repository is configured for completing laboratory assignments in the subje
 ---
 
 ## Documentation outputs (mandatory, in Russian)
-- `explanation.md` — detailed theory, background concepts, and mapping theory to implementation.
-- `simple.md` — same material in simpler language for a first-year technical student.
+- `explanation.md` - detailed theory, background concepts, and mapping theory to implementation.
+- `simple.md` - same material in simpler language for a first-year technical student.
 
 ## Output checklist per lab
 - [ ] Coding-only requirements extracted from prompt.
