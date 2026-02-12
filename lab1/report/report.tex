@@ -8,10 +8,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \usepackage{listings}
-\usepackage[english, main=russian]{babel}
 \geometry{a4paper,tmargin=2cm,bmargin=2cm,lmargin=3cm,rmargin=1cm}
 \lstset{
-    extendedchars=true,  
+    extendedchars=true,
     inputencoding=utf8
 }
 %--------------------------------------
@@ -19,11 +18,12 @@
 %Russian-specific packages
 %--------------------------------------
 \usepackage[T2A]{fontenc}
-\usepackage[utf8]{inputenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[english, main=russian]{babel}
 %--------------------------------------
 
 \usepackage{textcomp}
-\usepackage{indentfirst}               
+\usepackage{indentfirst}
 \usepackage{float}
 
 %Graphics
@@ -41,11 +41,11 @@
 \widowpenalty=10000
 
 \usepackage{enumitem}
-\usepackage{caption} 
+\usepackage{caption}
 \usepackage{hyperref}
 
 \hypersetup {
-	unicode=true
+    unicode=true
 }
 
 \DeclareCaptionLabelSeparator*{emdash}{~--- }
@@ -78,7 +78,7 @@
 %--------------------------------------
 
 %--------------------------------------
-%			ТИТУЛЬНЫЙ ЛИСТ (БЕЗ ИЗМЕНЕНИЙ)
+%            ТИТУЛЬНЫЙ ЛИСТ (БЕЗ ИЗМЕНЕНИЙ)
 %--------------------------------------
 \begin{titlepage}
 \thispagestyle{empty}
@@ -124,19 +124,19 @@
 
 \vspace*{-16pt}
 \hspace{30pt}\rule{0.866\textwidth}{0.4pt}
-  
+
 \vspace{11em}
 
 \begin{center}
-\Large {\bf Лабораторная работа № 1 } \\ 
+\Large {\bf Лабораторная работа № 1 } \\
 \large { <<Сравнение модели Галилея и модели Ньютона>>} \\
-\large { по курсу <<Моделирование>>} 
+\large { по курсу <<Моделирование>>}
 \end{center}\normalsize
 
 \vspace{8em}
 
 \begin{flushright}
-  {Студент группы ИУ9-81Б: Филимонов М. Д. \hspace*{15pt}\\ 
+  {Студент группы ИУ9-81Б: Филимонов М. Д. \hspace*{15pt}\\
   \vspace{2ex}
   Преподаватель: Домрачева А. Б.\hspace*{15pt}}
 \end{flushright}
@@ -149,91 +149,134 @@
 \end{titlepage}
 
 %--------------------------------------
-\section{Цель работы}
-% Placeholder
-Изучить и сравнить две модели движения тела: аналитическую модель Галилея без сопротивления воздуха и модель Ньютона с квадратичным сопротивлением воздуха, решаемую методом Рунге-Кутты 4-го порядка.
-
 \section{Постановка задачи}
-% Placeholder
-Для параметров $\alpha=45^\circ$, $v_0=1\,\text{м/с}$ и начальной точки $(0,0)$ требуется построить обе траектории, вычислить точную координату падения по оси $x$, определить время полета и максимальную высоту, а затем сравнить результаты. Для модели Ньютона использовать коэффициент сопротивления $\beta=\frac{cS\rho}{2}$ при $c=0.15$, $S=3$, $\rho=1.225\,\text{кг/м}^3$.
-
-\section{Теоретические основы}
-
-\subsection{Подраздел}
-% Placeholder
-В модели Галилея сопротивление воздуха отсутствует, поэтому движение по осям описывается формулами
-\[
- x(t)=x_0+v_0\cos\alpha\,t,\qquad
- y(t)=y_0+v_0\sin\alpha\,t-\frac{gt^2}{2}.
-\]
-После исключения времени получаем уравнение траектории
-\[
- y(x)=-\frac{g x^2}{2v_0^2\cos^2\alpha}+\tan\alpha\,x+y_0.
-\]
-Эта модель позволяет аналитически найти дальность полета и время падения.
-
-\subsection{Подраздел}
-% Placeholder
-В модели Ньютона вводятся компоненты скорости $u=dx/dt$ и $w=dy/dt$. Система уравнений имеет вид
-\[
-\begin{cases}
-\dfrac{dx}{dt}=u, \\
-\dfrac{dy}{dt}=w, \\
-\dfrac{du}{dt}=-\dfrac{\beta}{m}u\sqrt{u^2+w^2}, \\
-\dfrac{dw}{dt}=-g-\dfrac{\beta}{m}w\sqrt{u^2+w^2}.
-\end{cases}
-\]
-Здесь $\beta$ вычисляется по условию задачи, а масса берется для чугунного шарика: $m=\rho_{\text{чугун}}\frac{4}{3}\pi r^3$.
-
-\subsection{Подраздел}
-% Placeholder
-Для численного решения используется метод Рунге-Кутты 4-го порядка, обеспечивающий хорошую точность на малом шаге интегрирования. Точка падения определяется интерполяцией между соседними шагами, где значение $y$ меняет знак, что позволяет точнее вычислить $x_{\text{land}}$.
-
-\section{Программная реализация}
-
-\begin{minted}[breaklines]{python}
-# PLACEHOLDER:
-# Вставьте программный код
-def newton_rhs(state, params):
-    x, y, u, w = state
-    g = params["g"]
-    beta = params["beta"]
-    m = params["m"]
-    speed = (u*u + w*w) ** 0.5
-    du_dt = -(beta / m) * u * speed
-    dw_dt = -g - (beta / m) * w * speed
-    return [u, w, du_dt, dw_dt]
-
-def rk4_step(state, dt, rhs, params):
-    k1 = rhs(state, params)
-    k2 = rhs(state + 0.5 * dt * k1, params)
-    k3 = rhs(state + 0.5 * dt * k2, params)
-    k4 = rhs(state + dt * k3, params)
-    return state + (dt / 6.0) * (k1 + 2*k2 + 2*k3 + k4)
-\end{minted}
-
-\section{Анализ результатов}
-
-% Placeholder
-По результатам расчета получено:
+Требуется сравнить две модели движения тела, брошенного под углом к горизонту из точки $(0,0)$ при параметрах
+$\alpha=57^\circ$ и $v_0=160\,\text{м/с}$:
 \begin{itemize}
-    \item модель Галилея: $x_{\text{land}}=0.101937\,\text{м}$, $t_{\text{land}}=0.144160\,\text{с}$, $y_{\max}=0.025484\,\text{м}$;
-    \item модель Ньютона с сопротивлением: $x_{\text{land}}=0.061637\,\text{м}$, $t_{\text{land}}=0.123878\,\text{с}$, $y_{\max}=0.018945\,\text{м}$;
-    \item разница дальности: $\Delta x=x_{\text{newton}}-x_{\text{galileo}}=-0.040300\,\text{м}$.
+    \item модель Галилея без сопротивления воздуха;
+    \item модель Ньютона с квадратичным сопротивлением воздуха.
 \end{itemize}
-Полученные значения показывают, что учет сопротивления воздуха уменьшает дальность и высоту полета.
 
+Для модели Ньютона используется система ОДУ по переменным $x, y, u, w$,
+коэффициент сопротивления
+\[
+\beta = \frac{cS\rho}{2}, \quad c=0.15,\; S=3,\; \rho=1.225,
+\]
+радиус шара задан напрямую: $r=0.25\,\text{м}$,
+материал шара --- медь ($\rho_{copper}=8960\,\text{кг/м}^3$).
+
+Необходимо получить и сравнить дальность полета, время полета и максимальную высоту,
+сформировать таблицу сравнения и график траекторий.
+
+\section{Исследовательский этап}
+В модели Галилея сопротивление воздуха отсутствует, поэтому движение описывается аналитически:
+\[
+x(t)=x_0+v_0\cos\alpha\,t, \quad
+y(t)=y_0+v_0\sin\alpha\,t-\frac{gt^2}{2}.
+\]
+Точка приземления находится из условия $y(t)=0$.
+
+В модели Ньютона учитывается сопротивление воздуха, пропорциональное квадрату скорости,
+поэтому используется численное решение системы ОДУ методом Рунге--Кутты 4-го порядка.
+Момент приземления уточняется линейной интерполяцией между шагами,
+когда координата $y$ меняет знак.
+
+Итоговые значения:
+\begin{itemize}
+    \item Галилей: $x_{land}=2383.971836\,\text{м}$, $t_{land}=27.357246\,\text{с}$, $y_{max}=917.747757\,\text{м}$;
+    \item Ньютон: $x_{land}=1253.623389\,\text{м}$, $t_{land}=22.331246\,\text{с}$, $y_{max}=614.885546\,\text{м}$;
+    \item разница дальности: $\Delta x = -1130.348448\,\text{м}$.
+\end{itemize}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{trajectory_comparison.png}
-    \caption{Сравнение траекторий в моделях Галилея и Ньютона с сопротивлением воздуха}
-    \label{fig:result}
+    \caption{Сравнение траекторий в моделях Галилея и Ньютона}
+    \label{fig:trajectory_comparison}
 \end{figure}
 
-\section{Заключение}
+\section{Конструкторский этап}
+Реализация в \texttt{solution.py} декомпозирована на блоки:
+\begin{itemize}
+    \item структура параметров модели;
+    \item аналитический расчет траектории Галилея;
+    \item правая часть системы Ньютона и шаг RK4;
+    \item численное моделирование до события приземления с интерполяцией;
+    \item формирование таблицы сравнения и сохранение CSV;
+    \item построение и сохранение графика;
+    \item вывод итоговых метрик в консоль.
+\end{itemize}
 
-% Placeholder
-В работе выполнено сравнение двух моделей движения при одинаковых начальных условиях. Аналитическая модель Галилея дает большую дальность полета, тогда как модель Ньютона с сопротивлением воздуха показывает более реалистичное уменьшение дальности, времени полета и максимальной высоты. Численный метод Рунге-Кутты 4-го порядка корректно решает систему ОДУ и позволяет точно определять точку падения.
+Для воспроизводимости используются фиксированные параметры и
+явное сохранение артефактов в файлы \texttt{comparison.csv} и \texttt{trajectory\_comparison.png}.
+
+\section{Технологический этап}
+Проектные артефакты лабораторной \texttt{lab1}:
+\begin{itemize}
+    \item исполняемый скрипт: \texttt{solution.py};
+    \item эквивалентный ноутбук: \texttt{solution.ipynb};
+    \item результаты выполнения: \texttt{comparison.csv}, \texttt{trajectory\_comparison.png}.
+\end{itemize}
+
+Запуск в \texttt{uv}-окружении:
+\begin{verbatim}
+uv venv
+uv pip install numpy matplotlib jupyter
+uv run python solution.py
+uv run jupyter nbconvert --to notebook --execute solution.ipynb
+\end{verbatim}
+
+Полный исходный код проекта приведен ниже:
+\begin{listing}[H]
+\caption{Полный код проекта из \texttt{Sollution.md}}
+\label{lst:sollution}
+\inputminted[
+    encoding=utf8,
+    fontsize=\footnotesize,
+    breaklines,
+    linenos
+]{python}{../Sollution.md}
+\end{listing}
+
+\section{Тестирование, измерения и выводы}
+
+\subsection{Проверка соответствия требованиям}
+По данным \texttt{validation\_report.md} все обязательные пункты закрыты (PASS):
+\begin{itemize}
+    \item реализованы обе физические модели (Галилей и Ньютон);
+    \item метод RK4 применен для модели Ньютона;
+    \item коэффициент $\beta$ вычисляется по требуемой формуле;
+    \item учтена масса медного шарика;
+    \item точка приземления уточняется интерполяцией;
+    \item сформированы \texttt{comparison.csv} и \texttt{trajectory\_comparison.png};
+    \item подготовлены \texttt{solution.py}, \texttt{solution.ipynb}, \texttt{explanation.md}, \texttt{simple.md}.
+\end{itemize}
+
+\subsection{Результаты тестирования}
+Валидация включает базовый запуск и 3 тест-кейса:
+\begin{itemize}
+    \item базовый запуск \texttt{python solution.py} --- PASS;
+    \item тест-кейс 1 (новое условие, $\alpha=57^\circ$) --- PASS;
+    \item тест-кейс 2 ($\beta=0$, совпадение с Галилеем в пределах численной ошибки) --- PASS;
+    \item тест-кейс 3 ($\alpha=30^\circ$, устойчивость результата) --- PASS.
+\end{itemize}
+
+Проверка выполнения в \texttt{uv}-среде также прошла успешно:
+\texttt{uv run python solution.py},
+\texttt{uv run jupyter nbconvert --to notebook --execute solution.ipynb}.
+
+\subsection{Обнаруженные проблемы}
+Критические проблемы не обнаружены.
+
+\subsection{Рекомендации}
+\begin{itemize}
+    \item при необходимости повысить точность контроля $\beta=0$ можно уменьшить шаг интегрирования;
+    \item расширить анализ графиками компонент скорости $u(t)$ и $w(t)$.
+\end{itemize}
+
+\subsection{Итоговые выводы}
+Реализация лабораторной \texttt{lab1} соответствует обновленным coding-only требованиям:
+программа запускается без ошибок, результаты воспроизводимы,
+а сравнение моделей выполнено в табличной и графической форме.
 
 \end{document}
